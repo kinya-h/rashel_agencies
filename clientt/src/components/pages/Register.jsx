@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 // import instance from "../axios";
-import { getAccessToken } from "./utils/getAccessToken";
+import { getAccessToken } from "../utils/getAccessToken";
 import { Navigate, useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../../UserContext";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -36,7 +36,6 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-  
     // Usage of registerUser function
     const newUser = {
       username: username,
@@ -50,7 +49,6 @@ const Register = () => {
     } catch (error) {
       console.error("Registration failed:", error);
     }
-   
   };
 
   const registerUser = async (username, email, password, phone) => {

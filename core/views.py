@@ -1,3 +1,5 @@
+import requests
+import base64
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login
@@ -12,6 +14,9 @@ from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from .models import Customer, Category, Product, Game, Wallet, Transaction
 from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, GameSerializer, WalletSerializer, TransactionSerializer
 from django.views.generic import TemplateView
+from django.http import HttpResponseBadRequest
+from datetime import datetime
+from .mpesa_auth import get_acess_token
 
 from django_nextjs.render import render_nextjs_page_sync
 def index(request):
@@ -113,7 +118,116 @@ class GameViewSet(ModelViewSet):
 class WalletViewSet(ModelViewSet):
     queryset = Wallet.objects.all()
     serializer_class = WalletSerializer
+    permission_classes = [IsAuthenticated]
 
-class TransactionViewSet(ModelViewSet):
+    def create(self, request, *args, **kwargs):
+        (wallet, created) = Wallet.objects.get_or_create(
+            customer_id=request.user.id)
+       
+        serializer = WalletSerializer(wallet, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        (wallet, created) = Wallet.objects.get_or_create(
+            customer_id=request.user.id)
+        if request.method == 'GET':
+            serializer = WalletSerializer(wallet)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = WalletSerializer(wallet, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
+# class TransactionViewSet(ModelViewSet):
+#     queryset = Transaction.objects.all()
+#     serializer_class = TransactionSerializer
+
+class STKPushViewSet(ModelViewSet):
     queryset = Transaction.objects.all()
-    serializer_class = TransactionSerializer
+    serializer_class = TransactionSerializer 
+    
+
+    @action(detail=False, methods=['post'])
+    def push(self, request):
+        transaction_data = request.data
+        print("Transaction data = " , transaction_data)
+    # Set the access token
+        access_token = get_acess_token()['access_token']
+        shortcode = ''
+        passkey = ''
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    # "BusinessShortCode": 174379,
+    #     "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMjI0MjIzMzU1",
+    #     "Timestamp": "20230224223355",
+    #     "TransactionType": "CustomerPayBillOnline",
+    #     "Amount": ,
+    #     "PartyA": 254708374149,
+    #     "PartyB": 174379,
+    #     "PhoneNumber": 254708374149,
+        # amount = request.data.amount
+        # password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
+        password = "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMjI0MjIzMzU1"
+
+
+        # Set the Safaricom STK push API endpoint
+        url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+
+        # Set the request headers
+        headers = {"Authorization": "Bearer " + access_token, "Content-Type": "application/json"}
+
+        # Set the request body
+        payload = {
+            "BusinessShortCode": "174379",
+            "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMjI0MjI0ODA2",
+            "Timestamp": "20230224224806",
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": int(transaction_data.get('amount')),
+            "PartyA": "254743189001",
+            "PartyB": "174379",
+            "PhoneNumber": "254743189001",
+            # "CallBackURL": "http://localhost:5000/api/stk-push-callback/callback_url",
+            "CallBackURL": "https://mydomain.com/path",
+            "AccountReference": "CompanyXLTD",
+            "TransactionDesc": "Payment of X"
+        }
+
+        # Send the request
+        response = requests.post(url, json=payload, headers=headers)
+
+        # Print the response
+        print(response.text)
+        return Response(response.text)
+
+class STKPushCallbackViewSet(ModelViewSet):
+    """
+    A viewset that handles the callback URL for Safaricom STK push requests.
+    """
+    
+    @action(detail=False, methods=['post'])
+    def callback_url(self, request):
+        # Parse the response data
+        data = request.data
+        
+        # Check if the transaction was successful
+        if data['Body']['stkCallback']['ResultCode'] == 0:
+            # Get the transaction details
+            transaction = data['Body']['stkCallback']['CallbackMetadata']['Item']
+            
+            # Extract the relevant fields
+            amount = transaction[0]['Value']
+            mpesa_receipt_number = transaction[1]['Value']
+            transaction_date_str = transaction[3]['Value']
+            transaction_date = datetime.strptime(transaction_date_str, '%Y%m%d%H%M%S')
+            print("Transaction Status = " , transaction)
+            # Do something with the transaction details, such as updating your database
+            # ...
+            
+            # Return a success response
+            return Response({'ResultCode': 0, 'ResultDesc': 'The service was accepted successfully'})
+        else:
+            # Return an error response
+            return Response({'ResultCode': 1, 'ResultDesc': 'The service was not accepted'}, status=400)    

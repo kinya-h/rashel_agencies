@@ -1,0 +1,128 @@
+.side-menu {
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  font-family: Oxygen, Arial;
+  font-size: 1.071rem;
+  font-weight: 300;
+  line-height: 19px;
+  display: flex;
+}
+
+.rectangle-4 {
+  height: 100%;
+  background-color: #1f263e;
+  border: 0 solid;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-top: 11px;
+  display: flex;
+}
+
+.flex-container {
+  width: 70%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  display: flex;
+}
+
+.logo-full-colour {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.coinspace {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.line-1 {
+  width: 175px;
+  object-fit: cover;
+  border: 0.2px solid #f8f9fb;
+  margin-bottom: 2px;
+  margin-left: 1px;
+}
+
+.sidemenu-group-titl-instance {
+  width: 100%;
+  flex-basis: 4%;
+  margin-bottom: 3px;
+}
+
+.sidemenu-item-selec-instance-1 {
+  width: 100%;
+}
+
+.sidemenu-item-unsel-1-instance,
+.sidemenu-item-unsel-instance {
+  width: 100%;
+  flex-basis: 4%;
+}
+
+.sidemenu-item-unsel-2-instance,
+.sidemenu-group-titl-1-instance {
+  width: 100%;
+  flex-basis: 4%;
+  margin-bottom: 3px;
+}
+
+.sidemenu-item-hover-instance-1,
+.sidemenu-sub-item-instance,
+.sidemenu-sub-item-1-instance,
+.sidemenu-sub-item-2-instance,
+.sidemenu-sub-item-3-instance,
+.sidemenu-sub-item-4-instance,
+.sidemenu-sub-item-5-instance-1,
+.sidemenu-item-unsel-4-instance {
+  width: 100%;
+  flex-basis: 4%;
+}
+
+.sidemenu-item-unsel-3-instance {
+  width: 100%;
+  flex-basis: 4%;
+  margin-bottom: 4px;
+}
+
+.sidemenu-group-titl-2-instance-1 {
+  width: 100%;
+  flex-basis: 4%;
+  margin-bottom: 3px;
+}
+
+.sidemenu-item-unsel-5-instance {
+  width: 100%;
+  flex-basis: 4%;
+  margin-top: 1px;
+}
+
+.sidemenu-item-unsel-6-instance {
+  width: 100%;
+  flex-basis: 4%;
+}
+
+.sidemenu-item-unsel-7-instance {
+  width: 100%;
+  flex-basis: 4%;
+  margin-bottom: 89px;
+}
+
+.line {
+  width: 217px;
+  object-fit: cover;
+  border: 0.2px solid #f8f9fb;
+  margin-top: 4px;
+}
+
+.logout-instance-1 {
+  width: 100%;
+  flex-basis: 4%;
+}

@@ -1639,3 +1639,42 @@
   object-fit: cover;
   margin-top: 30px;
 }
+
+
+
+
+  /* Spinner */
+  .wheel {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+  border-radius: 50%;
+  transition: transform 4s ease-out;
+}
+
+.spinning {
+  animation: spin 4s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}
+
+.option {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}

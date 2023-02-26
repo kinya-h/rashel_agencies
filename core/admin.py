@@ -20,7 +20,12 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'category', 'price')
     list_per_page = 25
     ordering = ('-id',)
+    list_editable =['price']
     search_fields = ('title', 'description', 'category__name')
+    autocomplete_fields = ['category']
+    prepopulated_fields = {
+        'slug': ['title']
+    }
 
     list_select_related = ['category']
 

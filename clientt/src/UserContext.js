@@ -11,6 +11,7 @@ export const UserProvider = (props) => {
     localStorage.getItem("refresh") ? localStorage.getItem("refresh") : null
   );
   const [loading, setLoading] = useState(true);
+  const [username, setUserName] = useState("");
 
   const navigate = useNavigate();
 
@@ -45,7 +46,7 @@ export const UserProvider = (props) => {
   };
 
   const refreshToken = async () => {
-    console.log("getAccess Token called!");
+    console.log("refresh Token called!");
     try {
       const response = await axios.post(
         "http://localhost:5000/auth/jwt/refresh",
@@ -59,7 +60,8 @@ export const UserProvider = (props) => {
         localStorage.setItem("access", response.data.access);
         setAccess(response.data.access);
         setRefresh(response.data.refresh);
-      } else {
+      }
+      if (response.status === 401) {
         logoutUser();
       }
       if (loading) {
@@ -68,6 +70,7 @@ export const UserProvider = (props) => {
       return response;
     } catch (error) {
       console.error(error);
+      logoutUser();
     }
   };
 
@@ -99,16 +102,69 @@ export const UserProvider = (props) => {
     navigate("/login");
   };
 
+  const axiosInstance = axios.create({
+    baseURL: "http://127.0.0.1:5000",
+    headers: {
+      Authorization: `JWT ${access}`,
+    },
+  });
 
- const axiosInstance = axios.create({
-   baseURL: "http://127.0.0.1:5000",
-   headers: {
-     Authorization: `JWT ${access}`,
-   },
- });
+  const getBalance = async () => {
+    try {
+      const response = await axiosInstance.get("/api/wallets/me");
+
+      if (response.status === 200) {
+        // navigate("/");
+        // setUserName(response.data.)
+      }
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const updateBalance = async () => {
+    try {
+      const response = await axiosInstance.post("/api/wallets/me");
+
+      if (response.status === 200) {
+        // navigate("/");
+      }
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const getUser = async () => {
+    try {
+      const response = await axiosInstance.get("/auth/users/me");
+
+      if (response.status === 200) {
+        // navigate("/");
+        setUserName(response.data.username);
+      }
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <UserContext.Provider
-      value={{ loginUser, logoutUser, access, refresh, axiosInstance }}
+      value={{
+        loginUser,
+        logoutUser,
+        access,
+        refresh,
+        axiosInstance,
+        getBalance,
+        updateBalance,
+        refreshToken,
+        getUser,
+        username,
+      }}
     >
       {/* {loading ? false : props.children} */}
       {props.children}

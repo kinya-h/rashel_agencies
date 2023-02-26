@@ -1,17 +1,17 @@
 import React from "react";
-import illustration from "./assets/illustration.svg";
-import illustrations from "./assets/illustrations.svg";
-import bankumnwwtusc from "./assets/bankumnwwtusc.svg";
-import icon5 from "./assets/icon5.svg";
-import icon4 from "./assets/icon4.svg";
-import icon3 from "./assets/icon3.svg";
-import icon from "./assets/icon.svg";
-import icon2 from "./assets/icon2.svg";
-import lightcoin from "./assets/icon1.svg";
-import arrowRight from "./assets/arrowRight.svg";
-import curve from "./assets/group111.svg";
-import arrowUp from "./assets/arrowUp.svg";
-import divider from "./assets/divider.svg";
+import illustration from "../assets/illustration.svg";
+import illustrations from "../assets/illustrations.svg";
+import bankumnwwtusc from "../assets/bankumnwwtusc.svg";
+import icon5 from "../assets/icon5.svg";
+import icon4 from "../assets/icon4.svg";
+import icon3 from "../assets/icon3.svg";
+import icon from "../assets/icon.svg";
+import icon2 from "../assets/icon2.svg";
+import lightcoin from "../assets/icon1.svg";
+import arrowRight from "../assets/arrowRight.svg";
+import curve from "../assets/group111.svg";
+import arrowUp from "../assets/arrowUp.svg";
+import divider from "../assets/divider.svg";
 
 function Land() {
   return (
@@ -103,7 +103,7 @@ function Land() {
           <div className="flex">
             <img className="w-21 mx-6	h-21" src={icon3} />
             <div className="flex-column">
-              <span className="font-bold text-white	 leading-10">95</span>
+              <span className="font-bold text-white	 leading-10">95+</span>
               <h1 className="text-sm text-lightgray">Countries Supported</h1>
             </div>
           </div>

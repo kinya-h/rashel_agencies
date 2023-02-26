@@ -32,6 +32,7 @@ class WalletSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TransactionSerializer(serializers.ModelSerializer):
+    
     wallet = WalletSerializer(read_only=True)
     class Meta:
         model = Transaction
