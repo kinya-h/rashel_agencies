@@ -1,95 +1,63 @@
-import React from "react";
+import styles from "../style";
 
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Container from "@mui/material/Container";
+import { footerLinks, socialMedia } from "../constants";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Rashel Agencies
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+const Footer = () => (
+  <section className={`${styles.flexCenter} ${styles.paddingY} flex-col`}>
+    <div className={`${styles.flexStart} md:flex-row flex-col mb-8 w-full`}>
+      <div className="flex-[1] flex flex-col justify-start mr-10">
+        <h3
+          className="text-[1.55rem] text-white font-bold"
+        >Racheal Agencies</h3>
+        <p className={`${styles.paragraph} mt-4 max-w-[312px]`}>
+          A new way to trade online in an easy, reliable and secure way.
+        </p>
+      </div>
 
-const footers = [
-  {
-    title: "Company",
-    description: ["Team", "History", "Contact us", "Locations"],
-  },
-  {
-    title: "Features",
-    description: [
-      "Cool stuff",
-      "Random feature",
-      "Team feature",
-      "Developer stuff",
-      "Another one",
-    ],
-  },
-  {
-    title: "Resources",
-    description: [
-      "Resource",
-      "Resource name",
-      "Another resource",
-      "Final resource",
-    ],
-  },
-  {
-    title: "Legal",
-    description: ["Privacy policy", "Terms of use"],
-  },
-];
-
-function Footer() {
-  return (
-    <div>
-      {" "}
-      {/* Footer */}
-      <Container
-        maxWidth="md"
-        component="footer"
-        sx={{
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-          mt: 8,
-          py: [3, 6],
-        }}
-      >
-        <Grid container spacing={4} justifyContent="space-evenly">
-          {footers.map((footer) => (
-            <Grid item xs={6} sm={3} key={footer.title}>
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                {footer.title}
-              </Typography>
-              <ul>
-                {footer.description.map((item) => (
-                  <li key={item}>
-                    <Link href="#" variant="subtitle1" color="text.secondary">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Grid>
-          ))}
-        </Grid>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-      {/* End footer */}
+      <div className="flex-[1.5] w-full flex flex-row justify-between flex-wrap md:mt-0 mt-10">
+        {footerLinks.map((footerlink) => (
+          <div key={footerlink.title} className={`flex flex-col ss:my-0 my-4 min-w-[150px]`}>
+            <h4 className="font-poppins font-medium text-[18px] leading-[27px] text-white">
+              {footerlink.title}
+            </h4>
+            <ul className="list-none mt-4">
+              {footerlink.links.map((link, index) => (
+                <li
+                  key={link.name}
+                  className={`font-poppins font-normal text-[16px] leading-[24px] text-dimWhite hover:text-secondary cursor-pointer ${
+                    index !== footerlink.links.length - 1 ? "mb-4" : "mb-0"
+                  }`}
+                >
+                  {link.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
-  );
-}
+
+    <div className="w-full flex justify-between items-center md:flex-row flex-col pt-6 border-t-[1px] border-t-[#3F3E45]">
+      <p className="font-poppins font-normal text-center text-[18px] leading-[27px] text-white">
+        Copyright Ⓒ 2023 Rachael Agencies. All Rights Reserved.
+      </p>
+
+      <div className="flex flex-row md:mt-0 mt-6">
+        {socialMedia.map((social, index) => (
+          <span
+            key={social.id}
+       
+           className={`${ index !== socialMedia.length - 1 ? "mr-6" : "mr-0"
+          
+
+       
+          }`}
+            onClick={() => window.open(social.link)}
+          > {social.icon}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
 export default Footer;

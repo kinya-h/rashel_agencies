@@ -115,7 +115,7 @@ class LoanViewSet(ModelViewSet):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['paid']
+    filterset_fields = ['customer_id']
     permission_classes = [IsAdminUser]
 
 
@@ -128,6 +128,11 @@ class LoanViewSet(ModelViewSet):
             serializer = LoanSerializer(loan)
             return Response(serializer.data)
         elif request.method == 'PUT':
+            serializer = LoanSerializer(loan, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        elif request.method == 'POST':
             serializer = LoanSerializer(loan, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()

@@ -17,10 +17,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
-    list_display = ('amount', 'duration' , "customer_first_name" , "customer_last_name" , "payment_status")
+    list_display = ('amount', 'duration' , 'customer' , "payment_status")
     list_per_page = 25
     ordering = ('amount','duration' ,'paid')
     search_fields = ('customer__first_name',)
+    autocomplete_fields = ['customer']
+    list_select_related = ['customer']
+
 
     def customer_first_name(self , loan):
         return loan.customer.first_name

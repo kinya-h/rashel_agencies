@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import Sidebar from "../SideBar";
-import SideBar from "../SideBar";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,14 +8,13 @@ import { RiLoginBoxLine } from "react-icons/ri";
 import { MdAccountCircle } from "react-icons/md";
 import { BiArrowBack, BiHelpCircle } from "react-icons/bi";
 import { BsWalletFill } from "react-icons/bs";
+import { FcMoneyTransfer } from "react-icons/fc";
+import Footer from "../components/Footer";
+import Dashboard from "../Dashboard/scenes/dashboard";
+import Pricing from "../components/Pricing";
+import { UserContext } from "../UserContext";
 
-import Deposit from "./Deposit";
-import Pricing from "../Pricing";
-import Dashboard from "../../Dashboard/scenes/dashboard";
-
-import { UserContext } from "../../UserContext";
-import Footer from "../Footer";
-import ProgressCircle from "../../Dashboard/components/ProgressCircle";
+import ProgressCircle from "../Dashboard/components/ProgressCircle";
 
 function Home() {
   const navigate = useNavigate();
@@ -94,7 +91,7 @@ function Home() {
     {
       title: "Loans",
       icon: (
-        <BsWalletFill className="w-8 h-8 text-lightergray  hover:bg-gray-100 text-3xl" />
+        <FcMoneyTransfer className="w-8 h-8 text-lightergray  hover:bg-gray-100 text-3xl" />
       ),
 
       handleClick: handleLoans,
@@ -232,7 +229,7 @@ function Home() {
           ))}
         </ul>
       </aside>
-      <div className="bg-lightgray flex-1 p-7">
+      <div className="bg-lightgray flex-1  w-full">
         <span className="text-secondary text-2xl  font-mono font-bold">
           {" "}
           Hello {username}, Welcome
@@ -242,7 +239,9 @@ function Home() {
         {/* <SpinningWheel options={options} /> */}
         <Pricing />
         <Dashboard />
-        <Footer />
+        <div className="bg-primary mt-16 w-full">
+          <Footer />
+        </div>
         {/* <Deposits className=" ml-auto" /> */}
       </div>
     </div>

@@ -13,10 +13,10 @@ class Customer(models.Model):
     )
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return self.first_name
 
-    class Meta:
-         ordering = ['first_name', 'last_name']        
+    # class Meta:
+    #      ordering = ['first_name', 'last_name']        
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -48,7 +48,7 @@ class Game(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.customer.first_name} {self.customer.last_name} - {self.product.name}'
+        return f'{self.customer.first_name} {self.customer.last_name} - {self.product.title}'
 
 class Wallet(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE , related_name="wallet")
@@ -70,4 +70,6 @@ class Loan(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.IntegerField()
     paid = models.BooleanField(default=False)
-    customer = models.OneToOneField(Customer, on_delete=models.PROTECT , related_name="loans")
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT , related_name="loans")
+
+    

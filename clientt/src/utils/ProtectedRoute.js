@@ -1,6 +1,6 @@
 import { Route, redirect, Navigate } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../../UserContext";
+import { UserContext } from "../UserContext";
 
 // const PrivateRoute = ({ children, ...rest }) => {
 //   const ac = false;

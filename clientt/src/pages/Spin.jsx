@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../UserContext";
-import SpinningWheel from "../SpinningWheel";
+import { UserContext } from "../UserContext";
+import SpinningWheel from "../components/SpinningWheel";
 
 function Spin() {
   const [balance, setBalance] = useState();

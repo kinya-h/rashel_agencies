@@ -31,6 +31,7 @@ class WalletSerializer(serializers.ModelSerializer):
         model = Wallet
         fields = '__all__'
 class LoanSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer(read_only=True)
     class Meta:
         model = Loan
         fields = ['amount' , 'duration' , 'paid', 'customer']

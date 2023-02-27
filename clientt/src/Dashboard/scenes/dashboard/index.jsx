@@ -21,7 +21,6 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-
         <Box>
           <Button
             sx={{
@@ -239,7 +238,9 @@ const Dashboard = () => {
             >
               $48,352 revenue generated
             </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+            <Typography sx={{ m: 2 }}>
+              Includes extra misc expenditures and costs
+            </Typography>
           </Box>
         </Box>
         <Box

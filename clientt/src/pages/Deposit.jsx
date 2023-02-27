@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../UserContext";
-import WalletCard from "../WalletCard";
+import { UserContext } from "../UserContext";
+import WalletCard from "../components/WalletCard";
 
 function Deposit() {
   const [balance, setBalance] = useState();
