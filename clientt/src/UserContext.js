@@ -121,6 +121,7 @@ export const UserProvider = (props) => {
       return response;
     } catch (error) {
       console.error(error);
+      refreshToken();
     }
   };
   const updateBalance = async () => {

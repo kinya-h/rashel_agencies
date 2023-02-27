@@ -14,6 +14,8 @@ import TradingPage from "./components/TradingPage";
 
 import Deposit from "./components/pages/Deposit";
 import Spin from "./components/pages/Spin";
+import Dashboard from "./Dashboard/Dashboard";
+import Loan from "./components/pages/Loan";
 
 function App() {
   const isAuthenticated = true;
@@ -31,12 +33,22 @@ function App() {
               </PrivateRoute>
             }
           />{" "}
+          <Route
+            exact
+            path="/loans"
+            element={
+              <PrivateRoute>
+                <Loan />
+              </PrivateRoute>
+            }
+          />{" "}
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/test" element={<Home />}></Route>
           <Route path="/spinning" element={<Spin />}></Route>
           <Route path="/wallet" element={<TradingPage />}></Route>
           <Route path="/deposit" element={<Deposit />}></Route>
+          <Route path="/dash" element={<Dashboard />}></Route>
         </Routes>
       </UserProvider>
     </Router>

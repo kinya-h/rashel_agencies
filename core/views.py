@@ -11,8 +11,8 @@ from django.db.models import Sum,Avg,Max,Min,Count,F,Q
 from rest_framework.permissions import AllowAny, DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly, IsAdminUser, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
-from .models import Customer, Category, Product, Game, Wallet, Transaction
-from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, GameSerializer, WalletSerializer, TransactionSerializer
+from .models import Customer, Category, Product, Game, Wallet, Transaction , Loan
+from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, GameSerializer, WalletSerializer, TransactionSerializer , LoanSerializer
 from django.views.generic import TemplateView
 from django.http import HttpResponseBadRequest
 from datetime import datetime
@@ -110,7 +110,29 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'request':self.request} 
-        
+
+class LoanViewSet(ModelViewSet):
+    queryset = Loan.objects.all()
+    serializer_class = LoanSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['paid']
+    permission_classes = [IsAdminUser]
+
+
+
+    @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
+    def request(self, request):
+        (loan, created) = Loan.objects.get_or_create(
+            user_id=request.user.id)
+        if request.method == 'GET':
+            serializer = LoanSerializer(loan)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = LoanSerializer(loan, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
 class GameViewSet(ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer

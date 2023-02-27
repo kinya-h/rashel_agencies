@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Category, Product, Game, Wallet, Transaction
+from .models import Customer, Category, Loan,Product, Game, Wallet, Transaction
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
@@ -14,6 +14,26 @@ class CategoryAdmin(admin.ModelAdmin):
     list_per_page = 25
     ordering = ('name',)
     search_fields = ('name',)
+
+@admin.register(Loan)
+class LoanAdmin(admin.ModelAdmin):
+    list_display = ('amount', 'duration' , "customer_first_name" , "customer_last_name" , "payment_status")
+    list_per_page = 25
+    ordering = ('amount','duration' ,'paid')
+    search_fields = ('customer__first_name',)
+
+    def customer_first_name(self , loan):
+        return loan.customer.first_name
+
+    def customer_last_name(self , loan):
+        return loan.customer.last_name
+
+    @admin.display(ordering='paid')
+    def payment_status(self, loan):
+        if loan.paid == False:
+            return 'Not Paid'
+        return 'Paid'
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):

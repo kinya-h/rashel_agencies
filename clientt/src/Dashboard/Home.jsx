@@ -1,35 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
-import Sidebar from "../SideBar";
-import SideBar from "../SideBar";
+import React, { useState } from "react";
+import Sidebar from "./SideBar";
+import SideBar from "./SideBar";
+import { Link } from "react-router-dom";
 
-import { Link, useNavigate } from "react-router-dom";
-
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard ,MdAccountCircle} from "react-icons/md";
 import { FcSettings } from "react-icons/fc";
 import { RiLoginBoxLine } from "react-icons/ri";
-import { MdAccountCircle } from "react-icons/md";
 import { BiArrowBack, BiHelpCircle } from "react-icons/bi";
 import { BsWalletFill } from "react-icons/bs";
-
-import Deposit from "./Deposit";
-import Pricing from "../Pricing";
-import Dashboard from "../../Dashboard/scenes/dashboard";
-
-import { UserContext } from "../../UserContext";
-import Footer from "../Footer";
-import ProgressCircle from "../../Dashboard/components/ProgressCircle";
-
 function Home() {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const { getUser } = useContext(UserContext);
   const [open, setOpen] = useState(true);
   const [cryptoHoldings, setCryptoHoldings] = useState([
     { name: "Bitcoin", symbol: "BTC", amount: 2.5, value: 125000 },
     { name: "Ethereum", symbol: "ETH", amount: 10, value: 30000 },
     { name: "Dogecoin", symbol: "DOGE", amount: 10000, value: 1000 },
   ]);
-
   const [totalBalance, setTotalBalance] = useState(157000);
   const [availableBalance, setAvailableBalance] = useState(60000);
   const [tradeFormData, setTradeFormData] = useState({
@@ -38,73 +23,40 @@ function Home() {
     type: "buy",
   });
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const response = await getUser();
-      if (response.status === 200) {
-        setUsername(response.data.username);
-      }
-    };
-    fetchBalance();
-  }, [getUser]);
-
-  const handleAccounts = () => {
-    navigate("/deposit");
-  };
-  const handleWallet = () => {
-    navigate("/wallet");
-  };
-  const handleSpinning = () => {
-    navigate("/spinning");
-  };
-  const handleLoans = () => {
-    navigate("/loans");
-  };
-
   const Menus = [
+    {
+      title: "RASHEL AGNCIES",
+      icon: (
+        <MdDashboard className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
+      ),
+    },
     {
       title: "Dashboard",
       icon: (
         <MdDashboard className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
       ),
+      gap: true,
     },
-
     {
       title: "Inbox",
       icon: (
         <RiLoginBoxLine className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
       ),
+      gap: true,
     },
     {
       title: "Accounts",
       icon: (
         <MdAccountCircle className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
       ),
-      handleClick: handleAccounts,
-    },
-    {
-      title: "Wheel Spinning",
-      icon: (
-        // <BsWalletFill className="w-8 h-8 text-lightergray  hover:bg-gray-100 text-3xl" />
-        <ProgressCircle />
-      ),
-
-      handleClick: handleSpinning,
-    },
-    {
-      title: "Loans",
-      icon: (
-        <BsWalletFill className="w-8 h-8 text-lightergray  hover:bg-gray-100 text-3xl" />
-      ),
-
-      handleClick: handleLoans,
+      gap: true,
     },
     {
       title: "My Wallet",
       icon: (
         <BsWalletFill className="w-8 h-8 text-lightergray  hover:bg-gray-100 text-3xl" />
       ),
-      handleClick: handleWallet,
+      gap: true,
     },
 
     {
@@ -172,22 +124,22 @@ function Home() {
     setAvailableBalance(updatedAvailableBalance);
     setTradeFormData({ symbol: "", amount: "", type: "buy" });
   };
-  const options = ["Option 1", "Option 2", "Option 3"];
 
   return (
-    <div className="flex relative">
-      <aside
-        className={`sticky ${open ? "w-64" : "w-24 "}  
-         bg-primary  top-0 h-screen p-5  pt-8  duration-300`}
+    <div className="flex">
+      <div
+        className={` ${
+          open ? "w-64" : "w-20 "
+        } bg-primary z-40 h-screen p-5  pt-8 relative duration-300`}
       >
         <BiArrowBack
           className={`absolute cursor-pointer -right-3 top-9 w-7 h-7 
-           border-2 rounded-full text-white bg-secondary ${
+           border-2 rounded-full text-white bg-blue-600 ${
              !open && "rotate-180"
            }`}
           onClick={() => setOpen(!open)}
         />
-        <div className="flex gap-x-4  items-center">
+        <div className="flex gap-x-4 items-center">
           <MdDashboard className="cursor-pointer w-8 h-8 rounded-full hover:bg-gray-100 text-3xl text-lightergray duration-500" />
           <h1
             className={`text-white origin-left font-medium text-xl duration-200 ${
@@ -206,10 +158,7 @@ function Home() {
                 index === 0 && "bg-light-white"
               } `}
             >
-              <div
-                className="hover:bg-divbg   items-center  w-full p-1.5 rounded-md flex "
-                onClick={Menu.handleClick}
-              >
+              <div className="hover:bg-divbg   items-center  w-full p-1.5 rounded-md flex">
                 {" "}
                 {Menu.icon}
                 <span
@@ -219,31 +168,13 @@ function Home() {
                     {Menu.title}
                   </h1>
                 </span>
-                {Menu.title === "Inbox" ? (
-                  <span className="flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-                  </span>
-                ) : (
-                  ""
-                )}
               </div>
             </li>
           ))}
         </ul>
-      </aside>
-      <div className="bg-lightgray flex-1 p-7">
-        <span className="text-secondary text-2xl  font-mono font-bold">
-          {" "}
-          Hello {username}, Welcome
-        </span>
-        {/* <Chart /> */}
-
-        {/* <SpinningWheel options={options} /> */}
-        <Pricing />
-        <Dashboard />
-        <Footer />
-        {/* <Deposits className=" ml-auto" /> */}
+      </div>
+      <div className="h-screen flex-1 p-7">
+        <h1 className="text-2xl font-semibold ">Home Page</h1>
       </div>
     </div>
   );

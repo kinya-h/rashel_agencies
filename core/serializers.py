@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer, Category, Product, Game, Wallet, Transaction
+from .models import Customer, Category, Product, Game, Wallet, Transaction, Loan
 
 class CustomerSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
@@ -30,7 +30,10 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wallet
         fields = '__all__'
-
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ['amount' , 'duration' , 'paid', 'customer']
 class TransactionSerializer(serializers.ModelSerializer):
     
     wallet = WalletSerializer(read_only=True)

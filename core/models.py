@@ -64,3 +64,10 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f'{self.wallet.customer.first_name} {self.wallet.customer.last_name} - {self.amount}'
+
+
+class Loan(models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    duration = models.IntegerField()
+    paid = models.BooleanField(default=False)
+    customer = models.OneToOneField(Customer, on_delete=models.PROTECT , related_name="loans")
