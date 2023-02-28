@@ -1,24 +1,20 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "rashel_agencies/wsgi.py",
       "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
-      }
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     },
-    { "src": "client/build/**", "use": "@vercel/static" },
     {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build"
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "staticfiles_build" }
     }
   ],
   "routes": [
     {
-      "src": "client/build/**",
-      "dest": "/clientt/build/static/"
+      "src": "/clientt/build/static/(.*)",
+      "dest": "/static/$1"
     },
     {
       "src": "/(.*)",
