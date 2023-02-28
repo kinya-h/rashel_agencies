@@ -90,7 +90,7 @@ const Login = () => {
 
     const response = await loginUser(e);
     if (response.status === 200) {
-      navigate("/");
+      navigate("/home");
     }
   };
   // };
