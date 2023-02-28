@@ -12,8 +12,7 @@
 /build
 client/
 /clientt/node_modules
-/clientt/build
-/clientt/build/
+
 .vscode
 /rashel_agencies/_pycache__
 # misc
