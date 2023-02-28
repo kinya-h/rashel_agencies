@@ -9,7 +9,11 @@
         "runtime": "python3.9"
       }
     },
-    { "src": "client/build/**", "use": "@vercel/static" }
+    { "src": "client/build/**", "use": "@vercel/static" },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build"
+    }
   ],
   "routes": [
     {
