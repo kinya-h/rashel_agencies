@@ -4,8 +4,8 @@
 echo "Building the project..."
 
 python3.9 -m pip install -r requirements.txt
-pipenv shell
-pipenv install
+python3.9 -m pipenv shell
+python3.9 -m pipenv install
 
 echo "Make Migration..."
 python3.9 manage.py makemigrations --noinput
