@@ -12,6 +12,7 @@ router.register('category' , views.CategoryViewSet)
 router.register('stkpush' , views.STKPushViewSet, basename="stkush")
 router.register('wallets' , views.WalletViewSet , basename="wallets")
 router.register('loans' , views.LoanViewSet , basename="loans")
+router.register('referrals' , views.ReferralViewSet , basename="referrals")
 router.register(r'stk-push-callback', views.STKPushCallbackViewSet, basename='stk-push-callback')
 
 # router.register('login', views.LoginViewSet, basename='login')

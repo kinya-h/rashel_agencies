@@ -4,11 +4,14 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { getAccessToken } from "../utils/getAccessToken";
-
+import { ReactSpinner } from "react-spinning-wheel";
+import "react-spinning-wheel/dist/style.css";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { loginUser } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+  const { loginUser, loginError, signInLoading, setSignIngLoading } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -22,7 +25,7 @@ const Login = () => {
     // event.preventDefault();
 
     //     try {
-    //       const response = await fetch("http://localhost:5000/api/login/", {
+    //       const response = await fetch("api/login/", {
     //         method: "POST",
     //         headers: {
     //           "Content-Type": "application/json",
@@ -46,7 +49,7 @@ const Login = () => {
 
     //   try {
     //     const response = await axios.post(
-    //       "http://localhost:5000/auth/jwt/create",
+    //       "auth/jwt/create",
     //       {
     //         username: username,
     //         password: password,
@@ -68,7 +71,7 @@ const Login = () => {
     //   console.log("access access = ", accessToken);
 
     //   instance
-    //     .get("/auth/users/")
+    //     .get("https://rashel-production.up.railway.apphttps://rashel-production.up.railway.app/auth/users/")
     //     .then((response) => {
     //       console.log(response);
     //     })
@@ -76,7 +79,7 @@ const Login = () => {
     //       console.log(error);
     //     });
 
-    // api.get("http://localhost:5000/auth/users/").then((response) => {
+    // api.get("auth/users/").then((response) => {
     //   console.log(response.data);
     // });
 
@@ -88,9 +91,15 @@ const Login = () => {
     //     console.error(error);
     //   });
 
-    const response = await loginUser(e);
-    if (response.status === 200) {
-      navigate("/home");
+    setLoading(true);
+    try {
+      const response = await loginUser(e);
+
+      if (response.status === 200) {
+        navigate("/home");
+      }
+    } catch (error) {
+      setLoading(false);
     }
   };
   // };
@@ -100,7 +109,7 @@ const Login = () => {
     console.log("ACESS TOKEN = ", accessToken);
     axios
       .post(
-        "http://localhost:5000/api/customers/",
+        "api/customers/",
 
         {
           headers: {
@@ -122,6 +131,11 @@ const Login = () => {
           <h2 className="mb-4 text-3xl font-extrabold text-gray-900 text-center">
             Sign in to your account
           </h2>
+          <div>
+            {" "}
+            {loading ? <ReactSpinner size={50} color="#686769" /> : ""}
+            <h5 className="text-red-500"> {loginError} </h5>
+          </div>
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="remember" value="true" />
             <div className="mb-4">

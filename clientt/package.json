@@ -2,7 +2,7 @@
   "name": "clientt",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000/",
+  "proxy": "https://rashel-production.up.railway.app/",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -39,6 +39,7 @@
     "react-spinning-wheel": "^2.1.0",
     "react-wheel-of-prizes": "^1.0.9",
     "recharts": "^2.4.3",
+    "url-search-params": "^1.1.0",
     "web-vitals": "^2.1.4",
     "yup": "^1.0.2"
   },

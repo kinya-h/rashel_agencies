@@ -14,6 +14,7 @@ import Deposit from "./pages/Deposit";
 import Spin from "./pages/Spin";
 import Dashboard from "./Dashboard/Dashboard";
 import Loan from "./pages/Loan";
+import LoanRequest from "./pages/LoanRequest";
 
 function App() {
   const isAuthenticated = true;
@@ -25,7 +26,8 @@ function App() {
           <Route path="/" element={<Landing />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
-          <Route
+          <Route path="/home" element={<Home />}></Route>
+          {/* <Route
             exact
             path="/home"
             element={
@@ -33,7 +35,7 @@ function App() {
                 <Home />
               </PrivateRoute>
             }
-          />{" "}
+          />{" "} */}
           <Route
             exact
             path="/loans"
@@ -67,6 +69,15 @@ function App() {
             element={
               <PrivateRoute>
                 <Deposit />
+              </PrivateRoute>
+            }
+          />{" "}
+          <Route
+            exact
+            path="/request"
+            element={
+              <PrivateRoute>
+                <LoanRequest />
               </PrivateRoute>
             }
           />{" "}

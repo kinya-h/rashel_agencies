@@ -11,6 +11,8 @@ import { BsWalletFill } from "react-icons/bs";
 import { FcMoneyTransfer } from "react-icons/fc";
 import Footer from "../components/Footer";
 import Dashboard from "../Dashboard/scenes/dashboard";
+import Typography from "@mui/material/Typography";
+
 import Pricing from "../components/Pricing";
 import { UserContext } from "../UserContext";
 
@@ -19,8 +21,11 @@ import ProgressCircle from "../Dashboard/components/ProgressCircle";
 function Home() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const { getUser } = useContext(UserContext);
+  const [link, setLink] = useState("");
+  const [copySuccess, setCopySuccess] = useState("");
+  const { getUser, referrer } = useContext(UserContext);
   const [open, setOpen] = useState(true);
+  const [code, setCode] = useState("");
   const [cryptoHoldings, setCryptoHoldings] = useState([
     { name: "Bitcoin", symbol: "BTC", amount: 2.5, value: 125000 },
     { name: "Ethereum", symbol: "ETH", amount: 10, value: 30000 },
@@ -34,7 +39,7 @@ function Home() {
     amount: "",
     type: "buy",
   });
-
+  const [linkDone, setLinkDone] = useState(false);
   useEffect(() => {
     const fetchBalance = async () => {
       const response = await getUser();
@@ -52,7 +57,7 @@ function Home() {
     navigate("/wallet");
   };
   const handleSpinning = () => {
-    navigate("/spinning");
+    navigate("/spin");
   };
   const handleLoans = () => {
     navigate("/loans");
@@ -171,6 +176,34 @@ function Home() {
   };
   const options = ["Option 1", "Option 2", "Option 3"];
 
+  const generateLink = () => {
+    let baseUrl = window.location.protocol + "//" + window.location.host;
+
+    // link = link + "?" + "invitedby" + { username };
+    const referalLink = `${baseUrl}/register?invitedby=${username}`;
+    setLinkDone(true);
+    setLink(referalLink);
+  };
+
+  function handleCopy(e) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        setCopySuccess("Copied!");
+      })
+      .catch((err) => {
+        setCopySuccess("Failed to copy");
+      });
+  }
+
+  const handleFormChange = (e) => {
+    e.preventDefault();
+    console.log(code);
+  };
+
+  const handleCodeChange = (e) => {
+    setCode(e.target.value);
+  };
   return (
     <div className="flex relative">
       <aside
@@ -230,10 +263,89 @@ function Home() {
         </ul>
       </aside>
       <div className="bg-lightgray flex-1  w-full">
-        <span className="text-secondary text-2xl  font-mono font-bold">
-          {" "}
-          Hello {username}, Welcome
-        </span>
+        <div className="flex">
+          <span className="text-secondary text-2xl  font-mono font-bold">
+            {" "}
+            Hello {username}, Welcome.
+          </span>
+
+          <div className="ml-auto  mt-10 mr-10 ">
+            <button
+              className="bg-sky-500 p-2 hover:bg-sky-700 rounded-md text-white"
+              onClick={generateLink}
+            >
+              generate link
+            </button>
+            {linkDone ? (
+              <div>
+                <button
+                  className="bg-sky-500 p-2 mt-2 hover:bg-sky-700 rounded-md text-white"
+                  onClick={handleCopy}
+                >
+                  {" "}
+                  copy
+                </button>{" "}
+                <span className="text-linkColor ">
+                  <span className="text-gray">Your link is:</span> {link}{" "}
+                </span>{" "}
+              </div>
+            ) : (
+              ""
+            )}
+
+            <h5 className="text-green-600">{copySuccess} </h5>
+          </div>
+        </div>
+        <div className="flex">
+          <div className="bg-secondary rounded-md ml-auto mr-10 mt-2 shadow-lg">
+            <div className="m-2">
+              <Typography
+                component="h4"
+                variant="h5"
+                sx={{ p: 2 }}
+                color="common.white"
+              >
+                {" "}
+                Paybill Number: 756756
+              </Typography>
+              <Typography
+                component="h4"
+                variant="h5"
+                sx={{ px: 2 }}
+                color="common.white"
+              >
+                {" "}
+                Account Number: 39870
+              </Typography>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex">
+          <div className="ml-auto mr-10 mt-2">
+            <form onSubmit={handleFormChange}>
+              <label
+                htmlFor="username"
+                className="block text-gray-700 font-bold mb-1 text-secondary"
+              >
+                Enter Mpesa Reference code below:
+              </label>
+              <input
+                type="text"
+                Placeholder="Enter Mpesa Reference Code"
+                className="border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded mr-2 p-1.5"
+                onChange={handleCodeChange}
+              />
+
+              <button
+                type="submit"
+                className="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Done
+              </button>
+            </form>
+          </div>
+        </div>
         {/* <Chart /> */}
 
         {/* <SpinningWheel options={options} /> */}

@@ -10,9 +10,15 @@ export const UserProvider = (props) => {
   const [refresh, setRefresh] = useState(() =>
     localStorage.getItem("refresh") ? localStorage.getItem("refresh") : null
   );
+  const [loginResponse, setLoginResponse] = useState({});
+  const [loginError, setLoginError] = useState("");
+
+  const [signInLoading, setSignInLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [username, setUserName] = useState("");
-
+  const [loanAmount, setLoanAmount] = useState(0);
+  const [loanDuration, setLoanDuration] = useState(0);
+  const [referrer, setReferrer] = useState("");
   const navigate = useNavigate();
 
   const loginUser = async (e) => {
@@ -20,7 +26,7 @@ export const UserProvider = (props) => {
     console.log("loginUser  called!");
     try {
       const response = await axios.post(
-        "http://localhost:5000/auth/jwt/create",
+        "https://rashel-production.up.railway.app/auth/jwt/create",
         {
           username: e.target.username.value,
           password: e.target.password.value,
@@ -38,10 +44,27 @@ export const UserProvider = (props) => {
 
         // navigate("/");
       }
-
       return response;
     } catch (error) {
+      if (
+        error.response.data.detail ===
+        "No active account found with the given credentials"
+      ) {
+        setSignInLoading(false);
+
+        setLoginError("Please check your credentials and try again");
+      }
+      setLoginResponse(error);
+
       console.error(error);
+    }
+  };
+
+  const isLoading = () => {
+    if (signInLoading) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -49,7 +72,7 @@ export const UserProvider = (props) => {
     console.log("refresh Token called!");
     try {
       const response = await axios.post(
-        "http://localhost:5000/auth/jwt/refresh",
+        "https://rashel-production.up.railway.app/auth/jwt/refresh",
         {
           refresh: localStorage.getItem("refresh"),
         }
@@ -103,7 +126,7 @@ export const UserProvider = (props) => {
   };
 
   const axiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:5000",
+    baseURL: "https://rashel-production.up.railway.app",
     headers: {
       Authorization: `JWT ${access}`,
     },
@@ -111,7 +134,7 @@ export const UserProvider = (props) => {
 
   const getBalance = async () => {
     try {
-      const response = await axiosInstance.get("/api/wallets/me");
+      const response = await axiosInstance.get("api/wallets/me");
 
       if (response.status === 200) {
         // navigate("/");
@@ -124,9 +147,12 @@ export const UserProvider = (props) => {
       refreshToken();
     }
   };
-  const updateBalance = async () => {
+  const updateBalance = async (amount ) => {
+    console.log("Amount == ", amount);
     try {
-      const response = await axiosInstance.post("/api/wallets/me");
+      const response = await axiosInstance.put("api/wallets/me/", {
+        balance: amount,
+      });
 
       if (response.status === 200) {
         // navigate("/");
@@ -139,7 +165,7 @@ export const UserProvider = (props) => {
   };
   const getUser = async () => {
     try {
-      const response = await axiosInstance.get("/auth/users/me");
+      const response = await axiosInstance.get("auth/users/me");
 
       if (response.status === 200) {
         // navigate("/");
@@ -148,10 +174,25 @@ export const UserProvider = (props) => {
 
       return response;
     } catch (error) {
+      logoutUser();
       console.error(error);
     }
   };
+  const registerReferral = async (referrer) => {
+    try {
+      const response = await axiosInstance.post("api/referrals/", {
+        referred_by: referrer,
+      });
 
+      if (response.status === 200) {
+      }
+
+      return response;
+    } catch (error) {
+      logoutUser();
+      console.error(error);
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -165,6 +206,17 @@ export const UserProvider = (props) => {
         refreshToken,
         getUser,
         username,
+        loanAmount,
+        loanDuration,
+        setLoanDuration,
+        setLoanAmount,
+        referrer,
+        setReferrer,
+        loginError,
+        setSignInLoading,
+        signInLoading,
+        isLoading,
+        registerReferral,
       }}
     >
       {/* {loading ? false : props.children} */}

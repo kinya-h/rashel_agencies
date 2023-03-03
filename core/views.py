@@ -11,8 +11,8 @@ from django.db.models import Sum,Avg,Max,Min,Count,F,Q
 from rest_framework.permissions import AllowAny, DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly, IsAdminUser, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
-from .models import Customer, Category, Product, Game, Wallet, Transaction , Loan
-from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, GameSerializer, WalletSerializer, TransactionSerializer , LoanSerializer
+from .models import Customer, Category, Product, Game, Wallet, Transaction , Loan,Referral
+from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, GameSerializer, WalletSerializer, TransactionSerializer , LoanSerializer,ReferralSerializer
 from django.views.generic import TemplateView
 from django.http import HttpResponseBadRequest
 from datetime import datetime
@@ -108,8 +108,25 @@ class ProductViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category_id']
 
+
+    
     def get_serializer_context(self):
         return {'request':self.request} 
+        
+class ReferralViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ReferralSerializer
+
+
+    def create(self, request, *args, **kwargs):
+        (wallet, created) = Wallet.objects.get_or_create(
+            user_username=request.data.get('referred_by'))
+        serializer = WalletSerializer(wallet, data={customer})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    def get_queryset(self):
+        return Referral.objects.filter(user=self.request.user)
 
 class LoanViewSet(ModelViewSet):
     queryset = Loan.objects.all()
@@ -205,7 +222,10 @@ class STKPushViewSet(ModelViewSet):
 
         # Set the request headers
         headers = {"Authorization": "Bearer " + access_token, "Content-Type": "application/json"}
-
+        PhoneNumber = request.data.get('phone')
+        PhoneNumber = PhoneNumber.replace(PhoneNumber[0], '4', 1)
+        phone_initial = '25' 
+        PhoneNumber = phone_initial + PhoneNumber 
         # Set the request body
         payload = {
             "BusinessShortCode": "174379",
@@ -213,10 +233,10 @@ class STKPushViewSet(ModelViewSet):
             "Timestamp": "20230224224806",
             "TransactionType": "CustomerPayBillOnline",
             "Amount": int(transaction_data.get('amount')),
-            "PartyA": "254743189001",
+            "PartyA": int(PhoneNumber),
             "PartyB": "174379",
-            "PhoneNumber": "254743189001",
-            # "CallBackURL": "http://localhost:5000/api/stk-push-callback/callback_url",
+            "PhoneNumber": int(PhoneNumber),
+            # "CallBackURL": "https://rashel-production.up.railway.app/api/stk-push-callback/callback_url",
             "CallBackURL": "https://mydomain.com/path",
             "AccountReference": "CompanyXLTD",
             "TransactionDesc": "Payment of X"

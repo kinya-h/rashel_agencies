@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import "./spinningwheel.css";
+import { UserContext } from "../UserContext";
 
 const SpinningWheel = () => {
+  const [win, setWin] = useState(0);
+
+  const { getBalance, updateBalance } = useContext(UserContext);
   const [list, setList] = React.useState([
-    "$100",
-    "$500",
-    "$9,999",
-    "$1",
-    "$60",
-    "$1,000",
-    "$4.44",
-    "$0",
-    "$333",
+    "100",
+    "-50",
+    "20",
+    "80",
+    "1",
+    "-100",
+    "50",
+    "0",
+    "-80",
   ]);
   const [radius, setRadius] = React.useState(75);
   const [rotate, setRotate] = React.useState(0);
@@ -136,14 +140,25 @@ const SpinningWheel = () => {
     // set state variable to display result
     setNet(netRotation);
     setResult(result);
+    setWin(parseInt(list[result]));
   };
 
   const reset = () => {
+    updateUserBalance();
     // reset wheel and result
     setRotate(0);
     setEaseOut(0);
     setResult(null);
     setSpinning(false);
+  };
+
+  const updateUserBalance = async () => {
+    let balance = await getBalance();
+
+    balance = parseInt(balance.data.balance);
+    balance += win;
+
+    updateBalance(balance);
   };
 
   return (

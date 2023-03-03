@@ -1,9 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-// import instance from "../axios";
 import { getAccessToken } from "../utils/getAccessToken";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
+import URLSearchParams from "url-search-params";
+import { ReactSpinner } from "react-spinning-wheel";
+import "react-spinning-wheel/dist/style.css";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -11,10 +13,21 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [signUpError, setSignUpError] = useState("");
   const { axiosInstance } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const API_URL = "http://localhost:5000";
+  const API_URL = "https://rashel-production.up.railway.app";
+
+  const { referrer, setReferrer, registerReferral } = useContext(UserContext);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(document.location.search);
+
+    const referrerd_by = searchParams.get("invitedby");
+    setReferrer(referrerd_by);
+  }, [setReferrer]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -42,12 +55,16 @@ const Register = () => {
       email: email,
       password: password,
     };
-
+    setLoading(true);
     try {
       const response = await registerUser(username, email, password, phone);
-      console.log("User registered:", response);
     } catch (error) {
-      console.error("Registration failed:", error);
+      setLoading(false);
+      if (error.response.status === 400) {
+        setSignUpError("The password is too similar to the username.");
+      } else {
+        setSignUpError("Registration failed");
+      }
     }
   };
 
@@ -61,13 +78,14 @@ const Register = () => {
 
       const access = await getAccessToken(username, password); //Authenticate and get Access token and save it on the client
       console.log("my access token = ", access);
-      const accessToken = localStorage.getItem("token");
-      console.log("local access token = ", accessToken);
 
+      if (referrer !== null) {
+        registerReferral(referrer);
+      }
       //get the user via the access token
 
       const user_data = await axiosInstance
-        .get("/auth/users/")
+        .get("https://rashel-production.up.railway.app/auth/users/")
         .then((response) => {
           console.log("User ===> ", response);
           // Register user as a customer on successful response
@@ -81,12 +99,12 @@ const Register = () => {
               if (res.status === 200) {
                 navigate("/login");
               }
-              // <Navigate to="/login" replace={true} />;
             });
 
           console.log("customerResponse", customerResponse);
         })
         .catch((error) => {
+          setLoading(false);
           console.log(error);
         });
       console.log("user data", user_data);
@@ -101,13 +119,15 @@ const Register = () => {
   return (
     <div className="flex items-center mt-5 justify-center h-screen bg-gray-100">
       <div className="w-full max-w-sm">
-        <div className="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-          <h2 className="mb-4 text-3xl font-extrabold text-gray-900 text-center">
+        <div className="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-2">
+          <h3 className="mb-4 text-3xl font-extrabold text-gray-900 text-center">
             Sign up for an account
-          </h2>
+          </h3>
+          {loading ? <ReactSpinner size={50} color="#686769" /> : ""}
+          <h5 className="text-red-500"> {signUpError} </h5>
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="remember" value="true" />
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="username"
                 className="block text-gray-700 font-bold mb-2"
@@ -126,7 +146,7 @@ const Register = () => {
                 onChange={handleUsernameChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="email-address"
                 className="block text-gray-700 font-bold mb-2"
@@ -145,7 +165,7 @@ const Register = () => {
                 onChange={handleEmailChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="phone"
                 className="block text-gray-700 font-bold mb-2"
@@ -159,12 +179,12 @@ const Register = () => {
                 autoComplete="phone"
                 required
                 className="w-full px-3 py-2 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder="Phone Number"
                 value={phone}
                 onChange={handlePhoneChange}
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-2">
               <label
                 htmlFor="password"
                 className="block text-gray-700 font-bold mb-2"
@@ -183,7 +203,7 @@ const Register = () => {
                 onChange={handlePasswordChange}
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-2">
               <label
                 htmlFor="password"
                 className="block text-gray-700 font-bold mb-2"
@@ -202,7 +222,7 @@ const Register = () => {
                 onChange={handleConfirmPasswordChange}
               />
             </div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <input
                   id="remember-me"
@@ -219,10 +239,10 @@ const Register = () => {
               </div>
               <div className="text-sm">
                 <a
-                  href="#"
+                  href="/login"
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
-                  Forgot your password?
+                  alredy signed up Login?
                 </a>
               </div>
             </div>

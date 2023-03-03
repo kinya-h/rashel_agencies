@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { features } from "../constants";
 import styles, { layout } from "../style";
 import Button from "./Button";
@@ -28,7 +29,7 @@ const Business = () => (
   <section id="features" className={layout.section}>
     <div className={layout.sectionInfo}>
       <h2 className={styles.heading2}>
-        Why you should choose, <br className="sm:block hidden" /> Rachel
+        Why you should choose, <br className="sm:block hidden" /> Rashel
         Agencies.
       </h2>
       <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
@@ -37,7 +38,10 @@ const Business = () => (
         of available market.
       </p>
 
-      <Button styles={`mt-10  ml-24`} />
+      <Link to="/register">
+        {" "}
+        <Button styles={`mt-10  ml-24`} />
+      </Link>
     </div>
 
     <div className={`${layout.sectionImg} flex-col`}>

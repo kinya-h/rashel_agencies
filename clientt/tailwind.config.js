@@ -21,6 +21,7 @@ module.exports = {
         secondary: "#2B076E",
         lightBlue: "#491F98",
         lighterBlue: "#491f98",
+        linkColor: "#365314",
 
         dimWhite: "rgba(255, 255, 255, 0.7)",
         dimBlue: "rgba(9, 151, 124, 0.1)",

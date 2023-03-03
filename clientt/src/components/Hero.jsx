@@ -2,6 +2,7 @@ import styles from "../style";
 import { discount, illustration } from "../assets";
 
 import GetStarted from "./GetStarted";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -33,7 +34,9 @@ const Hero = () => {
           percentage rates, annual fees.Swap earn and build on the leading
           online investment platform
         </p>
-        <GetStarted />
+        <Link to="/register">
+          <GetStarted />
+        </Link>
       </div>
 
       <div
@@ -53,7 +56,9 @@ const Hero = () => {
       </div>
 
       <div className={`ss:hidden ${styles.flexCenter}`}>
-        <GetStarted />
+        <Link to="/register">
+          <GetStarted />
+        </Link>
       </div>
     </section>
   );

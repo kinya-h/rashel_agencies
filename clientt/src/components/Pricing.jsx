@@ -80,12 +80,12 @@ const tiers = [
   },
   {
     title: "Spin the Wheel",
-    price: "30",
+    price: "100 ↓",
     description: [
-      "50 users included",
-      "30 GB of storage",
+      "Lucky Spin",
+      "5 Spins Max",
+      "Max Amount 100",
       "Help center access",
-      "Priority email support",
     ],
     buttonText: "Get Started",
     buttonVariant: "outlined",
@@ -96,7 +96,6 @@ function PricingContent() {
   const navigate = useNavigate();
 
   const handlePricing = (price) => {
-    console.log(price);
     navigate("/deposit");
   };
   return (

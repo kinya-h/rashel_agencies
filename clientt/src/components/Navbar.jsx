@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
-      <h3 className="text-gradient font-bold text-[2rem]">RACHEL AGENCIES</h3>
+      <h3 className="text-gradient font-bold text-[2rem]">RASHEL AGENCIES</h3>
 
       <ul className="list-none sm:flex hidden justify-end items-center flex-1">
         {/* {navLinks.map((nav, index) => ( */}
@@ -67,7 +67,7 @@ const Navbar = () => {
               } `}
               onClick={() => setActive()}
             >
-              <Link to="/">Home</Link>
+              <Link to="/home">Home</Link>
             </li>
             <li
               className={`font-poppins font-medium cursor-pointer text-[16px] ${
@@ -75,7 +75,7 @@ const Navbar = () => {
               } `}
               onClick={() => setActive()}
             >
-              <Link to="/">Dashboard</Link>
+              <Link to="#">Dashboard</Link>
             </li>
             <li
               className={`font-poppins font-medium cursor-pointer text-[16px] ${
@@ -83,7 +83,23 @@ const Navbar = () => {
               } `}
               onClick={() => setActive()}
             >
-              <Link to="/">Contact Us</Link>
+              <Link to="#">Contact Us</Link>
+            </li>
+            <li
+              className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                active ? "text-white" : "text-dimWhite"
+              } `}
+              onClick={() => setActive()}
+            >
+              <Link to="/login">Login</Link>
+            </li>
+            <li
+              className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                active ? "text-white" : "text-dimWhite"
+              } `}
+              onClick={() => setActive()}
+            >
+              <Link to="/register">Register</Link>
             </li>
 
             {/* {/* // <li

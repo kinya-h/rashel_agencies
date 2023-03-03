@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, {useState , useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { UserContext } from "../UserContext";
 
 function Copyright(props) {
   return (
@@ -36,13 +38,21 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Loan() {
+  const navigate = useNavigate();
+  const { setLoanAmount, setLoanDuration } = useContext(UserContext);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      amount: data.get("amount"),
-      duration: data.get("duration"),
-    });
+    // console.log({
+    //   amount: data.get("amount"),
+    //   duration: data.get("duration"),
+    // });
+
+    setLoanAmount(data.get("amount"));
+    setLoanDuration(data.get('duration'));
+
+    navigate("/request")
+
   };
 
   return (
@@ -81,7 +91,7 @@ export default function Loan() {
           <Stack sx={{ ml: 8, mr: 2 }} spacing={2}>
             <Alert severity="info">
               8.9% Interest fees will be charged. Loan processing fee is KES
-              150. You can borrow up to KES 100,000!
+              300. You can borrow up to KES 100,000!
             </Alert>
           </Stack>
         </Grid>

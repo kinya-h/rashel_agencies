@@ -32,6 +32,7 @@ function Deposit() {
     try {
       const response = await axiosInstance.post("api/stkpush/push/", {
         amount: amount,
+        phone: phone,
       });
 
       if (response.status === 200) {
