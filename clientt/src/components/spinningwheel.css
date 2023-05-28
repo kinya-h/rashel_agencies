@@ -66,3 +66,12 @@ input {
   border: none;
   border-bottom: 1px solid black;
 } */
+
+#selector {
+  /* position: absolute; */
+  /* top: 21vh;
+  right: 47.5vw;
+  font-size: 40px;
+  z-index: 3; */
+  color: orangered;
+}

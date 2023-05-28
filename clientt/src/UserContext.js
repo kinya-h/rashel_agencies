@@ -1,9 +1,13 @@
 import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "./utils/getAccessToken";
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
+  // const baseUrl = window.location.protocol + "//" + window.location.host;
+  const baseUrl = "http://localhost:5000";
+
   const [access, setAccess] = useState(() =>
     localStorage.getItem("access") ? localStorage.getItem("access") : null
   );
@@ -25,13 +29,10 @@ export const UserProvider = (props) => {
     e.preventDefault();
     console.log("loginUser  called!");
     try {
-      const response = await axios.post(
-        "https://rashel-production.up.railway.app/auth/jwt/create",
-        {
-          username: e.target.username.value,
-          password: e.target.password.value,
-        }
-      );
+      const response = await axios.post(`${baseUrl}/auth/jwt/create`, {
+        username: e.target.username.value,
+        password: e.target.password.value,
+      });
 
       if (response.status === 200) {
         // Store the JWT token in local storage or cookies.
@@ -71,12 +72,9 @@ export const UserProvider = (props) => {
   const refreshToken = async () => {
     console.log("refresh Token called!");
     try {
-      const response = await axios.post(
-        "https://rashel-production.up.railway.app/auth/jwt/refresh",
-        {
-          refresh: localStorage.getItem("refresh"),
-        }
-      );
+      const response = await axios.post(`${baseUrl}/auth/jwt/refresh`, {
+        refresh: localStorage.getItem("refresh"),
+      });
 
       if (response.status === 200) {
         // Store the JWT token in local storage or cookies.
@@ -88,7 +86,7 @@ export const UserProvider = (props) => {
         logoutUser();
       }
       if (loading) {
-        setLoading(false);
+        setLoading(false); 
       }
       return response;
     } catch (error) {
@@ -126,9 +124,9 @@ export const UserProvider = (props) => {
   };
 
   const axiosInstance = axios.create({
-    baseURL: "https://rashel-production.up.railway.app",
+    baseURL: baseUrl,
     headers: {
-      Authorization: `JWT ${access}`,
+      Authorization: `JWT ${localStorage.getItem("access")}`,
     },
   });
 
@@ -147,7 +145,7 @@ export const UserProvider = (props) => {
       refreshToken();
     }
   };
-  const updateBalance = async (amount ) => {
+  const updateBalance = async (amount) => {
     console.log("Amount == ", amount);
     try {
       const response = await axiosInstance.put("api/wallets/me/", {
@@ -178,10 +176,35 @@ export const UserProvider = (props) => {
       console.error(error);
     }
   };
-  const registerReferral = async (referrer) => {
+  const fetchReferrals = async (username) => {
     try {
-      const response = await axiosInstance.post("api/referrals/", {
-        referred_by: referrer,
+      const response = await axiosInstance.get(
+        `/api/referrals/?referrer=${username}`
+      );
+
+      if (response.status === 200) {
+        // navigate("/");
+      }
+
+      return response;
+    } catch (error) {
+      logoutUser();
+      console.error(error);
+    }
+  };
+  const registerReferral = async (username, password, referrer) => {
+    const access = await getAccessToken(username, password);
+    localStorage.setItem("access", access.data.access);
+    const axiosIn = axios.create({
+      baseURL: baseUrl,
+      headers: {
+        Authorization: `JWT ${access.data.access}`,
+      },
+    });
+    try {
+      const response = await axiosIn.post("api/referrals/", {
+        username: username,
+        referrer: referrer,
       });
 
       if (response.status === 200) {
@@ -217,6 +240,7 @@ export const UserProvider = (props) => {
         signInLoading,
         isLoading,
         registerReferral,
+        fetchReferrals,
       }}
     >
       {/* {loading ? false : props.children} */}

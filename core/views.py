@@ -23,7 +23,7 @@ def index(request):
     return render_nextjs_page_sync(request)
 
 
-
+  
 class ReactAppView(TemplateView):
     template_name = 'index.html'
 
@@ -57,7 +57,6 @@ class LoginViewSet(ModelViewSet):
         return Response({'detail': 'Method "DELETE" not allowed.'}, status=405)
 
 
-
 class CustomerViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
@@ -84,7 +83,7 @@ class CustomerViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin ,
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
         elif request.method == 'PUT':
-            serializer = CustomerSerializer(customer, data=request.data)
+            serializer = CustomerSerializer(customer  , data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
@@ -94,7 +93,6 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
 
 
-    
     def delete(self , request , pk):
         category = get_object_or_404(Category , pk=pk)
         if category.products.count() > 0:
@@ -108,25 +106,31 @@ class ProductViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category_id']
 
-
     
     def get_serializer_context(self):
         return {'request':self.request} 
         
 class ReferralViewSet(ModelViewSet):
+
+    queryset = Referral.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ReferralSerializer
 
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['referrer']
+
 
     def create(self, request, *args, **kwargs):
-        (wallet, created) = Wallet.objects.get_or_create(
-            user_username=request.data.get('referred_by'))
-        serializer = WalletSerializer(wallet, data={customer})
+        (referral, created) = Referral.objects.get_or_create(
+            user_id=request.user.id)
+    
+        # serializer = ReferralSerializer(referral, data=request.data)
+        serializer = ReferralSerializer( referral , data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
     def get_queryset(self):
-        return Referral.objects.filter(user=self.request.user)
+        return Referral.objects.filter(referrer=self.request.data.get('username'))
 
 class LoanViewSet(ModelViewSet):
     queryset = Loan.objects.all()
@@ -165,8 +169,10 @@ class WalletViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+
+        (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
         (wallet, created) = Wallet.objects.get_or_create(
-            customer_id=request.user.id)
+            customer_id=customer.id)
        
         serializer = WalletSerializer(wallet, data=request.data)
         serializer.is_valid(raise_exception=True)

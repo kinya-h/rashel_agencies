@@ -8,14 +8,14 @@ const SpinningWheel = () => {
   const { getBalance, updateBalance } = useContext(UserContext);
   const [list, setList] = React.useState([
     "100",
-    "-50",
-    "20",
-    "80",
-    "1",
-    "-100",
-    "50",
-    "0",
-    "-80",
+    "200",
+    "500",
+    "800",
+    "1000",
+    "1500",
+    "1800",
+    "2000",
+    "2500",
   ]);
   const [radius, setRadius] = React.useState(75);
   const [rotate, setRotate] = React.useState(0);

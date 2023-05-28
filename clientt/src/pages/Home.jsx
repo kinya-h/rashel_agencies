@@ -9,6 +9,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { BiArrowBack, BiHelpCircle } from "react-icons/bi";
 import { BsWalletFill } from "react-icons/bs";
 import { FcMoneyTransfer } from "react-icons/fc";
+import { AiOutlineLogout } from "react-icons/ai";
 import Footer from "../components/Footer";
 import Dashboard from "../Dashboard/scenes/dashboard";
 import Typography from "@mui/material/Typography";
@@ -23,9 +24,18 @@ function Home() {
   const [username, setUsername] = useState("");
   const [link, setLink] = useState("");
   const [copySuccess, setCopySuccess] = useState("");
-  const { getUser, referrer } = useContext(UserContext);
+  const [referralsCount, setReferralsCount] = useState(0);
+  const {
+    getUser,
+    referrer,
+    logoutUser,
+    getBalance,
+    setBalance,
+    fetchReferrals,
+  } = useContext(UserContext);
   const [open, setOpen] = useState(true);
   const [code, setCode] = useState("");
+
   const [cryptoHoldings, setCryptoHoldings] = useState([
     { name: "Bitcoin", symbol: "BTC", amount: 2.5, value: 125000 },
     { name: "Ethereum", symbol: "ETH", amount: 10, value: 30000 },
@@ -46,9 +56,12 @@ function Home() {
       if (response.status === 200) {
         setUsername(response.data.username);
       }
+      const referrals = await fetchReferrals(username);
+      console.log(referrals);
+      setReferralsCount(referrals.data.length);
     };
     fetchBalance();
-  }, [getUser]);
+  }, [getUser, fetchReferrals, username]);
 
   const handleAccounts = () => {
     navigate("/deposit");
@@ -116,10 +129,11 @@ function Home() {
       ),
     },
     {
-      title: "Help",
+      title: "LogOut",
       icon: (
-        <BiHelpCircle className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
+        <AiOutlineLogout className="w-8 h-8 text-lightergray rounded-full hover:bg-gray-100 text-3xl" />
       ),
+      handleClick: logoutUser,
     },
   ];
 
@@ -185,6 +199,8 @@ function Home() {
     setLink(referalLink);
   };
 
+  const getReferrals = () => {};
+
   function handleCopy(e) {
     navigator.clipboard
       .writeText(link)
@@ -198,7 +214,6 @@ function Home() {
 
   const handleFormChange = (e) => {
     e.preventDefault();
-    console.log(code);
   };
 
   const handleCodeChange = (e) => {
@@ -268,14 +283,22 @@ function Home() {
             {" "}
             Hello {username}, Welcome.
           </span>
-
           <div className="ml-auto  mt-10 mr-10 ">
-            <button
-              className="bg-sky-500 p-2 hover:bg-sky-700 rounded-md text-white"
-              onClick={generateLink}
-            >
-              generate link
-            </button>
+            <span className="font-bold text-secondary">
+              {" "}
+              Current Referrals:{" "}
+            </span>{" "}
+            <span class="bg-red-100 text-red-800 text-md font-bold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+              {referralsCount}
+            </span>
+            <div>
+              <button
+                className="bg-sky-500 p-2 hover:bg-sky-700 rounded-md text-white"
+                onClick={generateLink}
+              >
+                generate link
+              </button>
+            </div>
             {linkDone ? (
               <div>
                 <button
@@ -292,7 +315,6 @@ function Home() {
             ) : (
               ""
             )}
-
             <h5 className="text-green-600">{copySuccess} </h5>
           </div>
         </div>

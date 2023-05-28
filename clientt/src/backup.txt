@@ -1,0 +1,105 @@
+import React from "react";
+import { arrowRight } from "../assets";
+import { AiFillHeart } from "react-icons/ai";
+const Benefits = () => {
+  return (
+    <div className="xs:pb-10 md:pb-10">
+      <div className="bg-lightgray">
+        <div className="flex justify-center items-center xs:ml-40">
+          <h1 className="font-bold font-2xl text-secondary  mt-16">
+            Health Benefits of Macadamia
+          </h1>
+        </div>
+      </div>
+      <div className="flex flex-row md:flex-row xs:flex-col xs:justify-center xs:items-center md:justify-between mr-24  ml-24 mb-24">
+        <div className="flex  flex-col ml-10 pb-5 mt-10 items-center  rounded-lg pt-0.5  bg-greenish w-60 h-70">
+          <AiFillHeart className="text-red-600 w-[30px] h-[30px]" />
+          <span className="font-bold mt-4 text-white">Heart Health</span>
+          <span className="p-2 text-center text-lightgray">
+            Macadamia nuts are rich in monounsaturated fats, specifically oleic
+            acid, which can help reduce bad cholesterol (LDL) levels and
+            increase good cholesterol (HDL) levels. This can contribute to a
+            healthier cardiovascular system and reduce the risk of heart
+            disease.
+          </span>
+          <button className="bg-blue-500 text-white mt-10  p-2 rounded-full">
+            {" "}
+            More
+          </button>
+        </div>
+        <div className="flex shadow-lg shadow-gray-500/50 flex-col ml-10 mt-10 items-center  rounded-lg pt-0.5 pb-0.5  bg-white w-60 h-70">
+          <span className="font-bold mt-4 text-secondary">
+            Antioxidant Properties
+          </span>
+          <span className="p-2 text-center text-gray">
+            Macadamia nuts contain antioxidants like flavonoids, tocopherols
+            (vitamin E), and selenium. These antioxidants help neutralize
+            harmful free radicals, protecting cells from oxidative stress and
+            potentially reducing the risk of chronic diseases.
+          </span>
+          <button className="text-white  p-2 rounded-full">
+            <img className=" object-contain" src={arrowRight} />{" "}
+          </button>
+        </div>
+        <div className="flex flex-col ml-10 mt-10 items-center  rounded-lg pt-0.5 pb-0.5  bg-white w-60 h-70">
+          <span className="font-bold mt-4 text-secondary">
+            Weight Management
+          </span>
+          <span className="p-2  text-center text-gray">
+            Despite being calorie-dense, macadamia nuts can still be a part of a
+            healthy weight management plan. The monounsaturated fats and dietary
+            fiber in macadamia nuts promote satiety, helping you feel fuller for
+            longer.
+          </span>
+          <button className="text-white  mt-2 p-2 rounded-full">
+            <img className=" object-contain" src={arrowRight} />{" "}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Benefits;
+
+
+import VideoOnboarding from "./VideoOnboarding";
+import videoPath from "../assets/macsinter_onboarding.mp4";
+import SustainablePracticesCard from "./SustainablePracticesCard";
+import Button from "./Button";
+
+const BrandStory = () => {
+  return (
+    <div>
+      <div className="flex flex-row  md:flex-row sm:flex-col xs:flex-col xs:overflow-hidden justify-between xs:space-y-10 ">
+        <div className="object-contain md:w-96	md:h-96 relative rounded-lg	mt-0 xs:mb-48 md:ml-10 xs:ml-2 xs:w-[90%] xs:h-92">
+          <div className="absolute inset-0">
+            {" "}
+            <VideoOnboarding videoSrc={videoPath} />
+          </div>
+        </div>
+        <div className="max-w-xs  xs:mx-10  md:-mt-24 xs:mt-24 sm:m-10 md:m-0">
+          <SustainablePracticesCard />
+        </div>
+        <div className="flex flex-col sm:ml-10 xs:ml-10 mr-24 pr-5  max-w-xs ">
+          <h1 className="text-lightgray font-bold font-2xl ">
+            Why you should consider Macsinter Enterprises
+          </h1>
+          <h1 className="text-gray-500">
+            We partner with trusted suppliers and adhering to rigorous
+            standards, we guarantee the integrity and sustainability of our
+            macadamia nuts
+          </h1>
+          <div className="mt-2">
+            <Button color="bg-blue-500" onClick={() => console.log("clicked!")}>
+              {" "}
+              Learn more
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BrandStory;

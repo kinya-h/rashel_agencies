@@ -1,12 +1,18 @@
 from django.contrib import admin
 from .models import Customer, Category, Loan,Product, Game, Wallet, Transaction , Referral
 
+class WalletInline(admin.TabularInline):
+    model = Wallet
+
+
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'address', 'date_created')
+    inlines = [WalletInline]
+    list_display = ('first_name', 'username', 'email', 'phone', 'address', 'date_created')
     list_per_page = 25
     ordering = ('-date_created',)
     search_fields = ('first_name', 'last_name', 'email')
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -15,14 +21,15 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
 
+
 @admin.register(Referral)
 class ReferralAdmin(admin.ModelAdmin):
-    list_display = ('user', 'referred_by' , 'created_at')
+    list_display = ( 'referrer' , 'username' ,'created_at')
     list_per_page = 25
-    ordering = ('user','referred_by' ,'created_at')
-    search_fields = ('referred_by',)
-    autocomplete_fields = ['referred_by']
-    list_select_related = ['user']
+    ordering = ('referrer' ,'created_at')
+    search_fields = ('referrer',)
+    # autocomplete_fields = ['referred_by']
+    list_select_related = ['user']    
 
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
@@ -72,13 +79,20 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'balance')
+    
+    list_display = ('customer_email', 'customer_phone' ,'balance')
     list_per_page = 25
     ordering = ('-balance',)
-    search_fields = ('customer__first_name', 'customer__last_name')
+    search_fields = ('customer_email', 'customer_phone')
 
     list_select_related = ['customer']
 
+    def customer_phone(self , wallet):
+        return wallet.customer.phone
+
+
+    def customer_email(self , wallet):
+        return wallet.customer.email
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('wallet', 'amount', 'date_created')

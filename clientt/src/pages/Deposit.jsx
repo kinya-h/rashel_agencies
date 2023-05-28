@@ -28,23 +28,22 @@ function Deposit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("stk push Token called!");
-    try {
-      const response = await axiosInstance.post("api/stkpush/push/", {
-        amount: amount,
-        phone: phone,
-      });
+    // try {
+    //   const response = await axiosInstance.post("api/stkpush/push/", {
+    //     amount: amount,
+    //     phone: phone,
+    //   });
 
-      if (response.status === 200) {
-        console.log(response);
-      } else {
-        alert("Error Try agin ");
-      }
+    //   if (response.status === 200) {
+    //     console.log(response);
+    //   } else {
+    //     alert("Error Try agin ");
+    //   }
 
-      return response;
-    } catch (error) {
-      console.error(error);
-    }
+    //   return response;
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
   return (
     <div className="bg-primary h-screen">

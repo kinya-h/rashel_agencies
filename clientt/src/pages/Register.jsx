@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { getAccessToken } from "../utils/getAccessToken";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import URLSearchParams from "url-search-params";
 import { ReactSpinner } from "react-spinning-wheel";
@@ -18,7 +18,8 @@ const Register = () => {
   const { axiosInstance } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const API_URL = "https://rashel-production.up.railway.app";
+  // const API_URL = window.location.protocol + "//" + window.location.host;
+  const API_URL = "http://localhost:5000";
 
   const { referrer, setReferrer, registerReferral } = useContext(UserContext);
 
@@ -58,6 +59,11 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await registerUser(username, email, password, phone);
+      console.log("user create res == ", response);
+      if (response.status === 201) {
+        const access = await getAccessToken(username, password); //Authenticate and get Access token and save it on the client
+        registerCustomer(access);
+      }
     } catch (error) {
       setLoading(false);
       if (error.response.status === 400) {
@@ -77,43 +83,51 @@ const Register = () => {
       });
 
       const access = await getAccessToken(username, password); //Authenticate and get Access token and save it on the client
-      console.log("my access token = ", access);
 
       if (referrer !== null) {
-        registerReferral(referrer);
+        registerReferral(username, password, referrer);
       }
-      //get the user via the access token
 
-      const user_data = await axiosInstance
-        .get("https://rashel-production.up.railway.app/auth/users/")
-        .then((response) => {
-          console.log("User ===> ", response);
-          // Register user as a customer on successful response
-          const customerResponse = axiosInstance
-            .put(`${API_URL}/api/customers/me/`, {
-              id: response.data.id,
-              phone,
-              email,
-            })
-            .then((res) => {
-              if (res.status === 200) {
-                navigate("/login");
-              }
-            });
-
-          console.log("customerResponse", customerResponse);
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.log(error);
-        });
-      console.log("user data", user_data);
-
-      return response.data;
+      return response;
     } catch (error) {
       console.error(error);
       throw error;
     }
+  };
+
+  const registerCustomer = async (access) => {
+    //get the user via the access token
+    const axiosInstance = axios.create({
+      // baseURL: "https://rashel-production.up.railway.app",
+      baseURL: "http://localhost:5000",
+      headers: {
+        Authorization: `JWT ${access.data.access}`,
+      },
+    });
+    const user_data = await axiosInstance
+      .get("/auth/users/")
+      .then((response) => {
+        console.log("User ===> ", response);
+        // Register user as a customer on successful response
+        const customerResponse = axiosInstance
+          .put(`${API_URL}/api/customers/me/`, {
+            id: response.data.id,
+            phone,
+            email,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              navigate("/login");
+            }
+          });
+
+        console.log("customerResponse", customerResponse);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+    console.log("user data", user_data);
   };
 
   return (

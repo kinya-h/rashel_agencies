@@ -6,12 +6,15 @@ import axios from "axios";
 import { getAccessToken } from "../utils/getAccessToken";
 import { ReactSpinner } from "react-spinning-wheel";
 import "react-spinning-wheel/dist/style.css";
+import { useSelector } from "react-redux";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { loginUser, loginError, signInLoading, setSignIngLoading } =
     useContext(UserContext);
+
+  const loading = useSelector((state) => state.user.loading);
   const navigate = useNavigate();
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
